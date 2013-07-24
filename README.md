@@ -37,6 +37,7 @@ gumHelper.startVideoStreaming(function errorCallback() {
 
     // or you could just keep a reference and use it later.
 });
+```
 
 ### Getting video data
 

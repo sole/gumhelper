@@ -1,16 +1,50 @@
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
 var gumHelper = require('../gumhelper');
 
-if(navigator.getMedia) {
-    gumHelper.startVideoStreaming(function() {
-        window.alert('Oh oh, something failed');
-    }, function(stream, videoElement, width, height) {
-        var container = document.getElementById('videoContainer');
+var buttonStart = document.getElementById('start');
+var buttonStop = document.getElementById('stop');
+var videoContainer = document.getElementById('videoContainer');
 
-        container.appendChild(videoElement);
-    });
+buttonStart.addEventListener('click', startStreaming, false);
+buttonStop.addEventListener('click', stopStreaming, false);
+
+if(navigator.getMedia) {
+
+    buttonStart.disabled = false;
+
+    startStreaming();
+
 } else {
+
     window.alert('For some reason it looks like your browser does not support getUserMedia');
+
+}
+
+
+function startStreaming() {
+
+    gumHelper.startVideoStreaming(function() {
+
+        window.alert('Oh oh, something failed');
+
+    }, function(stream, videoElement, width, height) {
+
+        videoContainer.appendChild(videoElement);
+        buttonStart.disabled = true;
+        buttonStop.disabled = false;
+
+    });
+
+}
+
+function stopStreaming() {
+
+    videoContainer.innerHTML = '';
+    gumHelper.stopVideoStreaming();
+
+    buttonStart.disabled = false;
+    buttonStop.disabled = true;
+
 }
 
 
