@@ -58,11 +58,11 @@ gumHelper.stopVideoStreaming();
 
 ## Demo
 
-Have a look at the demo in the ```demo/``` folder.
+Have a look at [the demo](./demo/index.html) in the ```demo/``` folder.
 
-If you edit demo.js and want to see the changes, you need to regenerate the ```demo-bundle.js``` file.
+If you edit ```demo.js``` and want to see the changes, you need to regenerate the ```demo-bundle.js``` file.
 
-Install browserify in case it's not installed yet:
+Install [browserify](http://browserify.org/) in case it's not installed yet:
 
 > npm install browserify -g
 
