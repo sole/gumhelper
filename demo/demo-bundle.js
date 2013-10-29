@@ -64,7 +64,6 @@ function stopStreaming() {
         navigator.msGetUserMedia
     );
 
-console.log('hey');
     //
 
     var video;
