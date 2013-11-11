@@ -1,6 +1,6 @@
 (function () { 
     
-    'use strict';
+    //'use strict';
 
     // A couple of shims for having a common interface
 
@@ -91,8 +91,8 @@
      * where that is not possible (includes 'deceptive' browsers, see inline
      * comment for more info)
      */
-    function startVideoStreaming(errorCallback, okCallback) {
-        
+    function startVideoStreaming(callback) {
+
         if(navigator.getMedia) {
 
             // Some browsers apparently have support for video streaming because of the
@@ -100,9 +100,14 @@
             // calls for streaming.
             // So we'll set up this timeout and if nothing happens after a while, we'll
             // conclude that there's no actual getUserMedia support.
-            noGUMSupportTimeout = setTimeout(onNoGUMSupport, 10000);
+            noGUMSupportTimeout = setTimeout(onStreamingTimeout, 10000);
 
-            startStreaming(errorCallback, function() {
+            startStreaming(function() {
+
+                    // ERROR!!!
+                    callback(new Error('getUserMedia cannot access the camera'));
+
+                }, function() {
                     
                     // The streaming started somehow, so we can assume /there is/
                     // gUM support
@@ -110,24 +115,26 @@
 
                 }, function(stream, videoElement, width, height) {
 
-
                     // Keep references, for stopping the stream later on.
                     cameraStream = stream;
                     video = videoElement;
 
-                    okCallback(stream, videoElement, width, height);
+                    callback(null, stream, videoElement, width, height);
 
                 }
             );
 
         } else {
 
-            onNoGUMSupport();
+            callback(new Error('Native device media streaming (getUserMedia) not supported in this browser.'));
+
         }
 
-        function onNoGUMSupport() {
-            errorCallback('Native device media streaming (getUserMedia) not supported in this browser.');
+
+        function onStreamingTimeout() {
+            callback(new Error('Timed out while trying to start streaming'));
         }
+
     }
 
 
@@ -159,13 +166,13 @@
     // Make it compatible for require.js/AMD loader(s)
     if(typeof define === 'function' && define.amd) {
         define(function() { return GumHelper; });
-    } else if(module !== undefined && module.exports) {
+    } else if(typeof module !== 'undefined' && module.exports) {
         // And for npm/node.js
         module.exports = GumHelper;
     } else {
-        window.GumHelper = GumHelper;
+        this.GumHelper = GumHelper;
     }
 
-})();
+}).call(this);
 
 

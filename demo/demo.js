@@ -1,4 +1,5 @@
-var gumHelper = require('../gumhelper');
+
+var gumHelper = window.GumHelper;
 
 var buttonStart = document.getElementById('start');
 var buttonStop = document.getElementById('stop');
@@ -22,15 +23,19 @@ if(navigator.getMedia) {
 
 function startStreaming() {
 
-    gumHelper.startVideoStreaming(function() {
+    gumHelper.startVideoStreaming(function(err, stream, videoElement, width, height) {
 
-        window.alert('Oh oh, something failed');
+        if(err) {
 
-    }, function(stream, videoElement, width, height) {
+            window.alert(err.message);
 
-        videoContainer.appendChild(videoElement);
-        buttonStart.disabled = true;
-        buttonStop.disabled = false;
+        } else {
+
+            videoContainer.appendChild(videoElement);
+            buttonStart.disabled = true;
+            buttonStop.disabled = false;
+
+        }
 
     });
 
