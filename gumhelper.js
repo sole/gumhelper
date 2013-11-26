@@ -1,9 +1,6 @@
 (function () { 
     
-    //'use strict';
-
     // A couple of shims for having a common interface
-
 
     window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
