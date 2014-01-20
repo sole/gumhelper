@@ -14,7 +14,6 @@
 
     var video;
     var cameraStream;
-    var noGUMSupportTimeout;
 
 
     /**
@@ -88,7 +87,12 @@
      * where that is not possible (includes 'deceptive' browsers, see inline
      * comment for more info)
      */
-    function startVideoStreaming(callback) {
+    function startVideoStreaming(callback, options) {
+
+        options = options || {};
+
+        var noGUMSupportTimeout;
+        var timeoutLength = options.timeout !== undefined ? options.timeout : 0;
 
         if(navigator.getMedia) {
 
@@ -97,7 +101,9 @@
             // calls for streaming.
             // So we'll set up this timeout and if nothing happens after a while, we'll
             // conclude that there's no actual getUserMedia support.
-            noGUMSupportTimeout = setTimeout(onStreamingTimeout, 10000);
+            if(timeoutLength > 0) {
+                noGUMSupportTimeout = setTimeout(onStreamingTimeout, 10000);
+            }
 
             startStreaming(function() {
 

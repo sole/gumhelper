@@ -6,6 +6,8 @@ A WebRTC's getUserMedia wrapper.
 
 ## How to use it
 
+Make sure to have a look at the [demo](http://sole.github.io/gumhelper/demo).
+
 ### Detect if getUserMedia is available (with no prefixes)
 
 Include the library in your HTML file:
@@ -18,7 +20,7 @@ Then:
 
 ```javascript
 if(navigator.getMedia) {
-    console.log('getUserMedia is available');
+    console.log('getUserMedia is available, go ahead');
 } else {
     console.error('No luck');
 }
@@ -32,7 +34,8 @@ gumHelper.startVideoStreaming(function callback(err, stream, videoElement, width
     if(err) {
         // Error!
         // This can fail for many reasons, even if the user doesn't accept the
-        // prompt for using the webcam (we set a timeout for detecting this)
+        // prompt for using the webcam (we set a timeout for detecting this, configure it
+        // with the options parameter-explained a bit below)
     } else {
         // Success!
         // stream: the video stream
@@ -45,7 +48,7 @@ gumHelper.startVideoStreaming(function callback(err, stream, videoElement, width
 
         // (or you could just keep a reference and use it later)
     }
-});
+}, { timeout: 20000 });
 ```
 
 
@@ -67,6 +70,17 @@ if(videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
 gumHelper.stopVideoStreaming();
 ```
 
+### Passing options
+
+gumHelper can be configured by passing in an `options` object when starting the stream. E.g.
+
+```javascript
+gumHelper.startVideoStreaming(callback, options);
+```
+
+For now only an option is available:
+
+* **timeout**: how long will gumHelper wait before giving up when starting the stream. In milliseconds. Default is to wait forever.
 
 ### Using with browserify
 
@@ -96,7 +110,12 @@ Have a look at [the demo](./demo/index.html) in the ```demo/``` folder.
 
 ## Changelog
 
-0.0.5 
+**0.0.6**
+
+* Added `options` parameter to `startVideoStreaming`. Please refer to the [Passing options](#passing-options) section for more details.
+* Changed timeout default value to wait *forever* for the stream to start. If you need to set a timeout, you will need to do it explicitly now.
+
+**0.0.5** 
 
 * Made the library package manager agnostic: you can use it with require, node/browserify or just plain JS includes. You don't need to use browserify to build the demo anymore!
 * The library now uses node-style callbacks: send one function with err as first parameter, and everything else afterwards. If the call was successfull, err will be null. Otherwise, it will contain an Error object; check its `message` property for more information.
